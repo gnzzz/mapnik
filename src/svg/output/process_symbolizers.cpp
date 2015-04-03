@@ -52,11 +52,43 @@ struct symbol_type_dispatch
     {
         return true;
     }
+    bool operator()(text_symbolizer const&) const
+    {
+// FIXME: this is true in the sense that a text can be drawn along a path, should check if that is the case and return accordingly
+        return false;
+    }
 };
 
 bool is_path_based(symbolizer const& sym)
 {
     return util::apply_visitor(symbol_type_dispatch(), sym);
+}
+
+struct symbol_type_dispatch2
+{
+    template <typename Symbolizer>
+    bool operator()(Symbolizer const&) const
+    {
+        return false;
+    }
+    bool operator()(line_symbolizer const&) const
+    {
+        return false;
+    }
+    bool operator()(polygon_symbolizer const&) const
+    {
+        return false;
+    }
+    bool operator()(text_symbolizer const&) const
+    {
+// FIXME: this is true in the sense that a text can be drawn along a path, should check if that is the case and return accordingly
+        return true;
+    }
+};
+
+bool is_text_based(symbolizer const& sym)
+{
+    return util::apply_visitor(symbol_type_dispatch2(), sym);
 }
 
 template <typename OutputIterator, typename PathType>
@@ -90,8 +122,8 @@ bool svg_renderer<OutputIterator>::process(rule::symbolizers const& syms,
         if (is_path_based(sym))
         {
             process_path = true;
+            util::apply_visitor(symbolizer_dispatch<svg_renderer<OutputIterator>>(*this, feature, prj_trans), sym);
         }
-        util::apply_visitor(symbolizer_dispatch<svg_renderer<OutputIterator>>(*this, feature, prj_trans), sym);
     }
 
     if (process_path)
@@ -109,6 +141,15 @@ bool svg_renderer<OutputIterator>::process(rule::symbolizers const& syms,
         // set the previously collected values back to their defaults
         // for the feature that will be processed next.
         path_attributes_.reset();
+    }
+    
+    // Do text based symboliser at the end to make sure that the way paths above are done doesn't end up on top
+    for (auto const& sym : syms)
+    {
+        if (is_text_based(sym))
+        {
+            util::apply_visitor(symbolizer_dispatch<svg_renderer<OutputIterator>>(*this, feature, prj_trans), sym);
+        }
     }
     return true;
 }

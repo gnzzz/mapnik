@@ -88,6 +88,9 @@ public:
     void process(polygon_symbolizer const& sym,
                  mapnik::feature_impl & feature,
                  proj_transform const& prj_trans);
+    void process(text_symbolizer const& sym,
+                 mapnik::feature_impl & feature,
+                 proj_transform const& prj_trans);
     // unimplemented
     void process(point_symbolizer const&,
                  mapnik::feature_impl &,
@@ -102,9 +105,6 @@ public:
                  mapnik::feature_impl &,
                  proj_transform const&) {}
     void process(shield_symbolizer const&,
-                 mapnik::feature_impl &,
-                 proj_transform const&) {}
-    void process(text_symbolizer const&,
                  mapnik::feature_impl &,
                  proj_transform const&) {}
     void process(building_symbolizer const&,

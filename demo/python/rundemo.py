@@ -369,6 +369,11 @@ if  mapnik.has_cairo():
     images_.append('demo_cairo_rgb.png')
     mapnik.render_to_file(m,'demo_cairo_argb32.png','ARGB32')
     images_.append('demo_cairo_argb.png')
+    
+# Native SVG rendered example
+if mapnik.has_svg_renderer():
+	mapnik.render_to_file(m,'demo_native.svg','svg-ng')
+	images_.append('demo_native.svg')
 
 print "\n\n", len(images_), "maps have been rendered in the current directory:"
 

@@ -118,6 +118,8 @@ static void shape_text(text_line & line,
                 continue;
             }
 
+            std::shared_ptr<value_unicode_string> curr_string(new value_unicode_string());
+            text.extract(text_item.start, text_item.end - text_item.start, *curr_string.get());
             double max_glyph_height = 0;
             for (unsigned i=0; i<num_glyphs; ++i)
             {
@@ -125,6 +127,7 @@ static void shape_text(text_line & line,
                 auto const& glyph = glyphs[i];
                 unsigned char_index = glyph.cluster;
                 glyph_info g(glyph.codepoint,char_index,text_item.format_);
+                g.string_value = curr_string;
                 if (face->glyph_dimensions(g))
                 {
                     g.face = face;

@@ -68,6 +68,7 @@ namespace mapnik { namespace svg {
         void set_stroke_linejoin(line_join_e stroke_linejoin);
         void set_stroke_dasharray(dash_array const& stroke_dasharray);
         void set_stroke_dashoffset(double stroke_dashoffset);
+        void set_path_id(std::string id);
 
         std::string const& fill_color() const;
         double fill_opacity() const;
@@ -78,6 +79,7 @@ namespace mapnik { namespace svg {
         std::string const& stroke_linejoin() const;
         dash_array const& stroke_dasharray() const;
         double stroke_dashoffset() const;
+        std::string const& path_id() const;
 
         /*!
          * @brief Set members back to their default values.
@@ -97,6 +99,7 @@ namespace mapnik { namespace svg {
         std::string stroke_linejoin_;
         dash_array stroke_dasharray_;
         double stroke_dashoffset_;
+        std::string path_id_;
     };
 
     /*!
@@ -197,6 +200,124 @@ namespace mapnik { namespace svg {
         double svg_version_;
         std::string svg_namespace_url_;
     };
+
+    /*!
+     * \brief The text_output_attributes struct
+     * This structure encapsulates the values needed to
+     * generate an svg (root) tag.
+     *
+     * The values are stored using the variable types that
+     * are required for output generation, but the interface
+     * is written with the original types. "set" methods
+     * perform the necessary conversions (i.e. from color to
+     * hex string
+     */
+    struct text_output_attributes
+    {
+        text_output_attributes()
+            : text_ratio_(0),
+              text_size_(10),
+              char_spacing_(0),
+              transform_("none")
+        {;}
+
+        // general layout options
+        void set_text_ratio(const double ratio);
+        // character formatting options
+        void set_face_name(const std::string &name);
+        void set_fontset(const std::string &name);
+        void set_text_size(const double size);
+        void set_char_spacing(const double &space);
+        void set_text_transform(const text_transform_e &trans);
+
+        double text_ratio() const;
+        std::string face_name() const;
+        std::string fontset() const;
+        double text_size() const;
+        double halo_radius() const;
+        double char_spacing() const;
+        std::string transform() const;
+
+        // reset to default values
+        void reset();
+
+        // general layout options
+        // - text-ratio
+        // character formatting options
+        // - face-name
+        // - fontset-name
+        // - size
+        // - character spacing
+        // - text-transform
+        double text_ratio_;
+        std::string face_name_;
+        std::string fontset_;
+        double text_size_;
+        double char_spacing_;
+        std::string transform_;
+    };
+
+    struct text_output_attributes_stroke : public text_output_attributes  {
+        text_output_attributes_stroke()
+            : text_output_attributes(),
+              halo_fill_("#FFFFFF"),
+              stroke_opacity_(1.0),
+              halo_radius_(0)
+        {;}
+
+        // character formatting options
+        void set_halo_fill(const color &fill);
+        void set_halo_radius(const double &radius);
+
+        std::string halo_fill() const;
+        double stroke_opacity() const;
+        double halo_radius() const;
+
+        // reset to default values
+        void reset();
+
+        // character formatting options
+        // - hallo-fill
+        // - halo-radius
+        std::string halo_fill_;
+        double stroke_opacity_;
+        double halo_radius_;
+    };
+
+    /*!
+     * \brief The text_output_attributes struct
+     * This structure encapsulates the values needed to
+     * generate an svg (root) tag.
+     *
+     * The values are stored using the variable types that
+     * are required for output generation, but the interface
+     * is written with the original types. "set" methods
+     * perform the necessary conversions (i.e. from color to
+     * hex string
+     */
+    struct text_output_attributes_fill : public text_output_attributes
+    {
+        text_output_attributes_fill()
+            : text_output_attributes(),
+              fill_("#000000"),
+              fill_opacity_(1.0)
+        {;}
+
+        // character formatting options
+        void set_fill(const color &fill);
+
+        std::string fill() const;
+        double fill_opacity() const;
+
+        // reset to default values
+        void reset();
+
+        // character formatting options
+        // - fill
+        std::string fill_;
+        double fill_opacity_;
+    };
+
     }}
 
 #endif // MAPNIK_SVG_OUTPUT_ATTRIBUTES

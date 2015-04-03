@@ -57,6 +57,6 @@ namespace mapnik { namespace svg {
         void generate_closing_group();
         OutputIterator& output_iterator_;
     };
-    }}
+}}
 
 #endif // MAPNIK_SVG_GENERATOR_HPP

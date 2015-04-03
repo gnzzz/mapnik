@@ -26,6 +26,7 @@
 #include <mapnik/text/evaluated_format_properties_ptr.hpp>
 #include <mapnik/pixel_position.hpp>
 #include <mapnik/util/noncopyable.hpp>
+#include <mapnik/value.hpp>
 
 #include <memory>
 #include <cmath>
@@ -50,7 +51,8 @@ struct glyph_info : util::noncopyable
           unscaled_advance(0.0),
           unscaled_line_height(0.0),
           scale_multiplier(1.0),
-          offset() {}
+          offset(),
+          string_value(0) {}
     glyph_info(glyph_info && rhs)
         : glyph_index(std::move(rhs.glyph_index)),
           char_index(std::move(rhs.char_index)),
@@ -61,7 +63,8 @@ struct glyph_info : util::noncopyable
           unscaled_advance(std::move(rhs.unscaled_advance)),
           unscaled_line_height(std::move(rhs.unscaled_line_height)),
           scale_multiplier(std::move(rhs.scale_multiplier)),
-          offset(std::move(rhs.offset)) {}
+          offset(std::move(rhs.offset)),
+          string_value(rhs.string_value) {}
 
     unsigned glyph_index;
     // Position in the string of all characters i.e. before itemizing
@@ -82,6 +85,8 @@ struct glyph_info : util::noncopyable
     double height() const { return ymax() - ymin(); };
     double advance() const { return unscaled_advance * scale_multiplier; };
     double line_height() const { return unscaled_line_height * scale_multiplier; };
+    
+    std::shared_ptr<value_unicode_string> string_value;
 };
 
 } //ns mapnik

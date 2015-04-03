@@ -34,6 +34,9 @@ namespace mapnik { namespace svg {
     struct path_output_attributes;
     struct rect_output_attributes;
     struct root_output_attributes;
+    struct text_output_attributes;
+    struct text_output_attributes_stroke;
+    struct text_output_attributes_fill;
 }}
 
 // boost
@@ -62,6 +65,7 @@ BOOST_FUSION_ADAPT_STRUCT(
     (std::string, stroke_linecap_)
     (std::string, stroke_linejoin_)
     (double, stroke_dashoffset_)
+    (std::string, path_id_)
     );
 
 /*!
@@ -88,6 +92,44 @@ BOOST_FUSION_ADAPT_STRUCT(
     (double, svg_version_)
     (std::string, svg_namespace_url_)
     );
+
+/*!
+ * mapnik::svg::text_output_attributes is adapted as a fusion sequence
+ * in order to be used directly by the text_output_attributes (below).
+ */
+BOOST_FUSION_ADAPT_STRUCT(
+    mapnik::svg::text_output_attributes,
+    (std::string, face_name_)
+    (double, text_size_)
+    (std::string, transform_)
+    )
+
+/*!
+ * mapnik::svg::text_output_attributes is adapted as a fusion sequence
+ * in order to be used directly by the text_output_attributes (below).
+ */
+BOOST_FUSION_ADAPT_STRUCT(
+    mapnik::svg::text_output_attributes_fill,
+    (std::string, face_name_)
+    (double, text_size_)
+    (std::string, transform_)
+    (std::string, fill_)
+    (double, fill_opacity_)
+    )
+
+/*!
+ * mapnik::svg::text_output_attributes is adapted as a fusion sequence
+ * in order to be used directly by the text_output_attributes (below).
+ */
+BOOST_FUSION_ADAPT_STRUCT(
+    mapnik::svg::text_output_attributes_stroke,
+    (std::string, face_name_)
+    (double, text_size_)
+    (std::string, transform_)
+    (std::string, halo_fill_)
+    (double, stroke_opacity_)
+    (double, halo_radius_)
+    )
 
 namespace mapnik { namespace svg {
 
@@ -121,6 +163,28 @@ struct svg_root_attributes_grammar : karma::grammar<OutputIterator, mapnik::svg:
     explicit svg_root_attributes_grammar();
     karma::rule<OutputIterator, mapnik::svg::root_output_attributes()> svg_root_attributes;
 };
+
+template <typename OutputIterator>
+struct svg_text_attributes_grammar : karma::grammar<OutputIterator, mapnik::svg::text_output_attributes()>
+{
+    explicit svg_text_attributes_grammar();
+    karma::rule<OutputIterator, mapnik::svg::text_output_attributes()> svg_text_attributes;
+};
+
+template <typename OutputIterator>
+struct svg_text_fill_attributes_grammar : karma::grammar<OutputIterator, mapnik::svg::text_output_attributes_fill()>
+{
+    explicit svg_text_fill_attributes_grammar();
+    karma::rule<OutputIterator, mapnik::svg::text_output_attributes_fill()> svg_text_attributes_fill;
+};
+
+template <typename OutputIterator>
+struct svg_text_stroke_attributes_grammar : karma::grammar<OutputIterator, mapnik::svg::text_output_attributes_stroke()>
+{
+    explicit svg_text_stroke_attributes_grammar();
+    karma::rule<OutputIterator, mapnik::svg::text_output_attributes_stroke()> svg_text_attributes_stroke;
+};
+
 }
 }
 

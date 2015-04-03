@@ -38,6 +38,7 @@ namespace mapnik { namespace svg {
 
 using namespace boost::spirit;
 
+// Path attributes
 template <typename OutputIterator>
 svg_path_attributes_grammar<OutputIterator>::svg_path_attributes_grammar()
         : svg_path_attributes_grammar::base_type(svg_path_attributes)
@@ -47,15 +48,14 @@ svg_path_attributes_grammar<OutputIterator>::svg_path_attributes_grammar()
     karma::string_type kstring;
 
     svg_path_attributes =
-        lit("fill=\"")
-        << kstring
-        << lit("\" fill-opacity=\"") << double_
-        << lit("\" stroke=\"") << kstring
-        << lit("\" stroke-opacity=\"") << double_
-        << lit("\" stroke-width=\"") << double_ << lit("px")
-        << lit("\" stroke-linecap=\"") << kstring
-        << lit("\" stroke-linejoin=\"") << kstring
-        << lit("\" stroke-dashoffset=\"") << double_ << lit("px") << lit('"');
+        lit("fill=\"") << kstring << lit("\" ")
+        << lit("fill-opacity=\"") << double_ << lit("\" ")
+        << lit("stroke=\"") << kstring << lit("\" ")
+        << lit("stroke-opacity=\"") << double_ << lit("\" ")
+        << lit("stroke-width=\"") << double_ << lit("px\" ")
+        << lit("stroke-linecap=\"") << kstring << lit("\" ")
+        << lit("stroke-linejoin=\"") << kstring << lit("\" ")
+        << lit("stroke-dashoffset=\"") << double_ << lit("px") << lit("\"");
 }
 
 template <typename OutputIterator>
@@ -69,6 +69,7 @@ svg_path_dash_array_grammar<OutputIterator>::svg_path_dash_array_grammar()
             -((double_ << lit(',') << double_) % lit(',')) << lit('"');
 }
 
+// Rectangle attributes
 template <typename OutputIterator>
 svg_rect_attributes_grammar<OutputIterator>::svg_rect_attributes_grammar()
     : svg_rect_attributes_grammar::base_type(svg_rect_attributes)
@@ -78,14 +79,14 @@ svg_rect_attributes_grammar<OutputIterator>::svg_rect_attributes_grammar()
     karma::string_type kstring;
 
     svg_rect_attributes =
-        lit("x=\"")
-        << int_
-        << lit("\" y=\"") << int_
-        << lit("\" width=\"") << int_ << lit("px")
-        << lit("\" height=\"") << int_ << lit("px")
-        << lit("\" fill=\"") << kstring << lit('"');
+           lit("x=\"") << int_ << lit("\" ")
+        << lit("y=\"") << int_ << lit("\" ")
+        << lit("width=\"") << int_ << lit("px\" ")
+        << lit("height=\"") << int_ << lit("px\" ")
+        << lit("fill=\"") << kstring << lit("\"");
 }
 
+// Root element attributes
 template <typename OutputIterator>
 svg_root_attributes_grammar<OutputIterator>::svg_root_attributes_grammar()
         : svg_root_attributes_grammar::base_type(svg_root_attributes)
@@ -96,14 +97,74 @@ svg_root_attributes_grammar<OutputIterator>::svg_root_attributes_grammar()
     karma::double_type double_;
 
     svg_root_attributes =
-        lit("width=\"")
-        << int_
-        << lit("px")
-        << lit("\" height=\"") << int_ << lit("px")
-        << lit("\" version=\"") << double_
-        << lit("\" xmlns=\"") << kstring
-        << lit("\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"");
+        lit("width=\"") << int_ << lit("px\" ")
+        << lit("height=\"") << int_ << lit("px\" ")
+        << lit("version=\"") << double_ << lit("\" ")
+        << lit("xmlns=\"") << kstring << lit("\" ")
+        << lit("xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" ")
+        << lit("xmlns:xlink=\"http://www.w3.org/1999/xlink\"");
 }
+
+
+// Text stuff
+template <typename OutputIterator>
+svg_text_attributes_grammar<OutputIterator>::svg_text_attributes_grammar()
+        : svg_text_attributes_grammar::base_type(svg_text_attributes)
+{
+        karma::lit_type lit;
+        karma::string_type kstring;
+        karma::double_type double_;
+
+        svg_text_attributes =
+                lit(" font-family=\"") << kstring << lit("\" ")
+                << lit("font-size=\"") << double_ << lit("px\" ")
+//                << lit(" fill=") << kstring 
+//                << lit(" fill-opacity=") << double_
+//                << lit(" style=\"") 
+//                    << lit("stroke: ") << kstring 
+//                    << lit("; stroke-opacity: ") << double_ 
+//                    << "; stroke-width: " << double_ 
+//                << lit("\"")
+                << lit("text-transform=\"") << kstring << lit("\" ");
+    
+}
+
+template <typename OutputIterator>
+svg_text_fill_attributes_grammar<OutputIterator>::svg_text_fill_attributes_grammar()
+        : svg_text_fill_attributes_grammar::base_type(svg_text_attributes_fill)
+{
+        karma::lit_type lit;
+        karma::string_type kstring;
+        karma::double_type double_;
+
+        svg_text_attributes_fill =
+                lit(" font-family=\"") << kstring << lit("\" ")
+                << lit(" font-size=\"") << double_ << lit("px\" ")
+                << lit(" text-transform=\"") << kstring << lit("\" ")
+                << lit(" fill=\"") << kstring  << lit("\" ")
+                << lit(" fill-opacity=\"") << double_ << lit("\" ");
+}
+
+template <typename OutputIterator>
+svg_text_stroke_attributes_grammar<OutputIterator>::svg_text_stroke_attributes_grammar()
+        : svg_text_stroke_attributes_grammar::base_type(svg_text_attributes_stroke)
+{
+        karma::lit_type lit;
+        karma::string_type kstring;
+        karma::double_type double_;
+
+        svg_text_attributes_stroke =
+                lit(" font-family=\"") << kstring << lit("\" ")
+                << lit("font-size=\"") << double_ << lit("px\" ")
+                << lit("text-transform=\"") << kstring << lit("\" ")
+                << lit("fill=\"none\" ")
+                << lit("style=\"") 
+                    << lit("stroke: ") << kstring << lit("; ")
+                    << lit("stroke-opacity: ") << double_ << lit("; ")
+                    << "stroke-width: " << double_
+                << lit("\"");
+}
+
 
 }
 }

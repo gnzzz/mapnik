@@ -90,6 +90,10 @@ static void shape_text(text_line & line,
             if (U_SUCCESS(err) && (num_chars == length))
             {
                 U_NAMESPACE_QUALIFIER StringCharacterIterator iter(shaped);
+                
+                std::shared_ptr<value_unicode_string> curr_string(new value_unicode_string());
+                text.extract(text_item.start, text_item.end - text_item.start, *curr_string.get());
+                
                 for (iter.setToStart(); iter.hasNext();)
                 {
                     UChar ch = iter.nextPostInc();
@@ -106,6 +110,7 @@ static void shape_text(text_line & line,
                         tmp.char_index = char_index;
                         tmp.face = face;
                         tmp.format = text_item.format;
+                        tmp.string_value = curr_string;
                         tmp.scale_multiplier = size / face->get_face()->units_per_EM;
                         width_map[char_index++] += tmp.advance();
                         line.add_glyph(tmp, scale_factor);

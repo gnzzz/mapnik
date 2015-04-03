@@ -222,7 +222,7 @@ namespace mapnik { namespace svg {
         fill_color_ = "#000000";
     }
 
-    // rect_output_attributes
+    // root_output_attributes
 
     const double root_output_attributes::SVG_VERSION = 1.1;
     const std::string root_output_attributes::SVG_NAMESPACE_URL = "http://www.w3.org/2000/svg";
@@ -288,6 +288,133 @@ namespace mapnik { namespace svg {
         svg_version_ = SVG_VERSION;
         svg_namespace_url_ = SVG_NAMESPACE_URL;
     }
+    
+    //
+    // text_output_attributes
+    //
+
+    void text_output_attributes::set_text_ratio(const double ratio) {
+        text_ratio_ = ratio;
+    }
+
+    void text_output_attributes::set_face_name(const std::string &name) {
+        face_name_ = name;
+    }
+
+    void text_output_attributes::set_fontset(const std::string &name) {
+        fontset_ = name;
+    }
+
+    void text_output_attributes::set_text_size(const double size) {
+        text_size_ = size;
+    }
+
+    void text_output_attributes::set_char_spacing(const double &space) {
+        char_spacing_ = space;
+    }
+
+    void text_output_attributes::set_text_transform(const text_transform_e &trans) {
+/*        switch(trans) {
+            case text_transform_e::NONE:
+            case text_transform_e::UPPERCASE:
+            case text_transform_e::LOWERCASE:
+            case text_transform_e::CAPITALIZE:
+            case text_transform_e::text_transform_MAX:
+            default:
+                break;
+        }
+        */
+    }
+
+    double text_output_attributes::text_ratio() const {
+        return text_ratio_;
+    }
+
+    std::string text_output_attributes::face_name() const {
+        return face_name_;
+    }
+
+    std::string text_output_attributes::fontset() const {
+        return fontset_;
+    }
+
+    double text_output_attributes::text_size() const {
+        return text_size_;
+    }
+
+    double text_output_attributes::char_spacing() const {
+        return char_spacing_;
+    }
+
+    std::string text_output_attributes::transform() const {
+        return transform_;
+    }
+
+    void text_output_attributes::reset() {
+        text_ratio_ = 0;
+        text_size_ = 10;
+        char_spacing_ = 0;
+        transform_ = "none";
+    }
+
+    //
+    // text_output_attributes_fill
+    //
+
+    void text_output_attributes_fill::set_fill(const color &fill) {
+// FIXME: rgba() isn't fully supported, fill and alpha is probably better
+        fill_ = fill.to_string();
+        fill_opacity_ = fill.alpha()/(double)(0xff);
+    }
+
+    std::string text_output_attributes_fill::fill() const {
+        return fill_;
+    }
+
+    double text_output_attributes_fill::fill_opacity() const {
+        return fill_opacity_;
+    }
+
+    void text_output_attributes_fill::reset() {
+        static_cast<text_output_attributes*>(this)->reset();
+        fill_ = "#000000";
+        fill_opacity_ = 1.0;
+    }
+
+    //
+    // text_output_attributes_stroke
+    //
+
+    void text_output_attributes_stroke::set_halo_fill(const color &fill) {
+// FIXME: rgba() isn't fully supported, fill and alpha is probably better
+//        halo_fill_ = fill.to_hex_string_no_alpha();
+        halo_fill_ = fill.to_string();
+        stroke_opacity_ = fill.alpha()/(double)(0xff);
+    }
+
+    void text_output_attributes_stroke::set_halo_radius(const double &radius) {
+        halo_radius_ = radius;
+    }
+
+    std::string text_output_attributes_stroke::halo_fill() const {
+        return halo_fill_;
+    }
+
+    double text_output_attributes_stroke::stroke_opacity() const {
+        return stroke_opacity_;
+    }
+
+    double text_output_attributes_stroke::halo_radius() const {
+        return halo_radius_;
+    }
+
+    void text_output_attributes_stroke::reset() {
+        static_cast<text_output_attributes*>(this)->reset();
+        halo_fill_ = "#000000";
+        stroke_opacity_ = 1.0;
+        halo_radius_ = 1.0;
+    }
+    
     }}
 
 #endif

@@ -34,15 +34,16 @@ namespace mapnik
  */
 template <typename T>
 void svg_renderer<T>::process(line_symbolizer const& sym,
-                              mapnik::feature_impl & /*feature*/,
+                              mapnik::feature_impl & feature,
                               proj_transform const& /*prj_trans*/)
 {
     path_attributes_.set_stroke_color(get<color>(sym, keys::stroke, mapnik::color(0,0,0)));
     path_attributes_.set_stroke_opacity(get<value_double>(sym,keys::stroke_opacity, 1.0));
     path_attributes_.set_stroke_width(get<value_double>(sym, keys::stroke_width, 1.0));
+    path_attributes_.set_stroke_linecap(get<line_cap_enum, keys::stroke_linecap>(sym, feature, common_.vars_));
+    path_attributes_.set_stroke_linejoin(get<line_join_enum, keys::stroke_linejoin>(sym, feature, common_.vars_));
     /*
-    path_attributes_.set_stroke_linecap(sym.get_stroke().get_line_cap());
-    path_attributes_.set_stroke_linejoin(sym.get_stroke().get_line_join());
+    path_attributes_.set_stroke_dasharray(get_optional<dash_array>(sym, keys::stroke_dasharray, feature, common_.vars_));
     path_attributes_.set_stroke_dasharray(sym.get_stroke().get_dash_array());
     path_attributes_.set_stroke_dashoffset(sym.get_stroke().dash_offset());
     */
